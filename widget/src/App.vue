@@ -28,6 +28,7 @@ const { hr } = useHeartRate()
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
   img {
     width: 100%;
