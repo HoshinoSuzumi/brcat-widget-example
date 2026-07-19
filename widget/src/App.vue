@@ -38,13 +38,12 @@ const { hr } = useHeartRate()
 
   div {
     position: absolute;
-    font-size: 32px;
-    padding-top: 4px;
+    font-size: 30px;
+    font-weight: bold;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    font: bold;
     pointer-events: none;
   }
 }

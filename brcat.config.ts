@@ -33,7 +33,7 @@ const config: BrcatUserConfig = {
   },
 
   streaming: {
-    viewport: { width: 1920, height: 1080 },
+    viewport: { width: 260, height: 260 },
   },
 
   permissions: [
