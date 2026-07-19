@@ -127,28 +127,50 @@ function packagePlugin() {
 }
 
 // ── 自定义 Vite 插件：构建完成后生成 manifest 并打包 ──
+// 如果同时存在 widget 和 streaming，主构建完成后触发第二个构建
 function brcatPostBuildPlugin() {
+  let secondBuildDone = false
+
   return {
     name: 'brcat-post-build',
-    writeBundle() {
+    async writeBundle() {
+      // 如果同时需要构建 streaming 且尚未构建，先触发 streaming 构建
+      if (hasWidget && hasStreaming && !secondBuildDone) {
+        secondBuildDone = true
+        const { build: viteBuild } = await import('vite')
+        logger.info('Building streaming entry...')
+        await viteBuild({
+          ...streamingConfig,
+          configFile: false,
+          logLevel: 'info',
+        } as any)
+      }
+
       generateManifest()
       packagePlugin()
     },
   }
 }
 
-// ── 根据目录结构选择构建配置 ──
+// ── 根据目录结构选择主构建配置 ──
 function resolveConfig(): UserConfig {
-  // 新版目录结构
-  if (hasWidget || hasStreaming) {
-    // 多入口：需要分别构建，这里只配置第一个，第二个通过脚本处理
-    // 实际使用中开发者应分别构建，此处仅提供 widget 配置
-    if (hasWidget) return { ...widgetConfig, plugins: [...(widgetConfig.plugins ?? []), brcatPostBuildPlugin()] }
-    if (hasStreaming) return { ...streamingConfig, plugins: [...(streamingConfig.plugins ?? []), brcatPostBuildPlugin()] }
+  if (hasWidget) {
+    return {
+      ...widgetConfig,
+      plugins: [...(widgetConfig.plugins ?? []), brcatPostBuildPlugin()],
+    }
   }
-
+  if (hasStreaming) {
+    return {
+      ...streamingConfig,
+      plugins: [...(streamingConfig.plugins ?? []), brcatPostBuildPlugin()],
+    }
+  }
   // 兼容旧结构
-  return { ...legacyConfig, plugins: [...(legacyConfig.plugins ?? []), brcatPostBuildPlugin()] }
+  return {
+    ...legacyConfig,
+    plugins: [...(legacyConfig.plugins ?? []), brcatPostBuildPlugin()],
+  }
 }
 
 export default defineConfig(resolveConfig() as any)

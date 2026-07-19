@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { listen } from '@tauri-apps/api/event'
+import { useHeartRate } from '../../shared/composables/useHeartRate'
 
-const hr = ref(0)
-
-listen('heart-rate', (event) => {
-  hr.value = event.payload as number
-})
+const { hr } = useHeartRate()
 </script>
 
 <template>
