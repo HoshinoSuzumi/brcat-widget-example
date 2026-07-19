@@ -4,11 +4,8 @@ interface BrcatUserConfig {
   icon?: string
   widget?: {
     window?: {
-      defaultWidth?: number
-      defaultHeight?: number
-      minWidth?: number
-      minHeight?: number
-      resizable?: boolean
+      width?: number
+      height?: number
       alwaysOnTop?: boolean
       transparent?: boolean
     }
@@ -29,11 +26,8 @@ const config: BrcatUserConfig = {
 
   widget: {
     window: {
-      defaultWidth: 100,
-      defaultHeight: 100,
-      minWidth: 80,
-      minHeight: 80,
-      resizable: true,
+      width: 100,
+      height: 100,
       alwaysOnTop: true,
     },
   },

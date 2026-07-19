@@ -71,11 +71,8 @@ function generateManifest() {
     manifest.widget = {
       entry: 'widget/index.html',
       window: {
-        defaultWidth: brcatCfg.widget.window?.defaultWidth ?? 200,
-        defaultHeight: brcatCfg.widget.window?.defaultHeight ?? 150,
-        minWidth: brcatCfg.widget.window?.minWidth ?? 80,
-        minHeight: brcatCfg.widget.window?.minHeight ?? 80,
-        resizable: brcatCfg.widget.window?.resizable ?? true,
+        width: brcatCfg.widget.window?.width ?? 200,
+        height: brcatCfg.widget.window?.height ?? 150,
         alwaysOnTop: brcatCfg.widget.window?.alwaysOnTop ?? true,
         transparent: brcatCfg.widget.window?.transparent ?? true,
       },
