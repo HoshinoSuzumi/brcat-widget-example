@@ -29,8 +29,8 @@ const config: BrcatUserConfig = {
 
   widget: {
     window: {
-      defaultWidth: 200,
-      defaultHeight: 150,
+      defaultWidth: 100,
+      defaultHeight: 100,
       minWidth: 80,
       minHeight: 80,
       resizable: true,

@@ -111,18 +111,18 @@ function generateManifest() {
   logger.info(`Generated dist/${pluginId}/hbcat-manifest.json`)
 }
 
-// ── 打包 .brcp ──
+// ── 打包 .brcp（文件名含版本号） ──
 function packagePlugin() {
   const sourceDir = path.join(__dirname, 'dist', pluginId)
   const output = fs.createWriteStream(
-    path.join(__dirname, 'dist', `${pluginId}.brcp`),
+    path.join(__dirname, 'dist', `${pluginId}_${pkg.version}.brcp`),
   )
   const archive = archiver('zip', { zlib: { level: 9 } })
   archive.pipe(output)
   archive.on('error', (err: Error) => { throw err })
   archive.directory(sourceDir, false)
   archive.finalize().then(() => {
-    logger.info(`Packaged dist/${pluginId}.brcp`)
+    logger.info(`Packaged dist/${pluginId}_${pkg.version}.brcp`)
   })
 }
 
