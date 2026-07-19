@@ -102,6 +102,7 @@ function generateManifest() {
   }
 
   fs.writeFileSync(
+    // TODO: 统一配置文件、缩写等命名
     path.join(manifestDir, 'hbcat-manifest.json'),
     JSON.stringify(manifest, null, 2),
   )
