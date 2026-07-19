@@ -23,8 +23,7 @@ const { hr } = useHeartRate()
 .widget {
   width: 100%;
   height: 100%;
-  /* background: #ffa1c6; */
-  border-radius: 10px;
+  border-radius: 10vmin;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,7 +37,7 @@ const { hr } = useHeartRate()
 
   div {
     position: absolute;
-    font-size: 30px;
+    font-size: 30vmin;
     font-weight: bold;
     inset: 0;
     display: flex;
