@@ -1,8 +1,8 @@
 {
-  "name": "brcat-widget-example",
-  "description": "A simple example of a widget using brcat",
+  "name": "hrcat-widget-example",
+  "description": "A simple example of a widget using hrcat",
   "keywords": [
-    "brcat",
+    "hrcat",
     "widget",
     "example"
   ],

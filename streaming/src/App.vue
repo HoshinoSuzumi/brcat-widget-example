@@ -7,7 +7,7 @@ const maxHR = ref(200)
 let eventSource: EventSource | null = null
 
 // 插件 ID（构建时 base 路径已包含，此处用相对路径）
-const pluginId = 'brcat-widget-example'
+const pluginId = 'hrcat-widget-example'
 
 // 读取插件配置
 async function loadConfig() {

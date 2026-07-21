@@ -1,12 +1,12 @@
 import { createLogger, defineConfig, type UserConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import pkg from './package.json'
-import brcatCfg from './brcat.config'
+import hrcatCfg from './hrcat.config'
 import fs from 'fs'
 import path from 'path'
 import archiver from 'archiver'
 
-const logger = createLogger('info', { prefix: 'brcat' })
+const logger = createLogger('info', { prefix: 'hrcat' })
 
 // ── 插件 ID（使用 package.json 的 name） ──
 const pluginId = pkg.name
@@ -56,35 +56,35 @@ function generateManifest() {
     manifestVersion: 1,
     plugin: {
       id: pluginId,
-      name: brcatCfg.name ?? pkg.name,
+      name: hrcatCfg.name ?? pkg.name,
       version: pkg.version,
       description: pkg.description,
       author: pkg.author ?? null,
-      homepage: brcatCfg.homepage ?? null,
-      icon: brcatCfg.icon ?? 'icon.png',
+      homepage: hrcatCfg.homepage ?? null,
+      icon: hrcatCfg.icon ?? 'icon.png',
     },
-    permissions: brcatCfg.permissions ?? [],
-    settings: brcatCfg.settings ?? null,
+    permissions: hrcatCfg.permissions ?? [],
+    settings: hrcatCfg.settings ?? null,
   }
 
-  if (hasWidget && brcatCfg.widget) {
+  if (hasWidget && hrcatCfg.widget) {
     manifest.widget = {
       entry: 'widget/index.html',
       window: {
-        width: brcatCfg.widget.window?.width ?? 200,
-        height: brcatCfg.widget.window?.height ?? 150,
-        alwaysOnTop: brcatCfg.widget.window?.alwaysOnTop ?? true,
-        transparent: brcatCfg.widget.window?.transparent ?? true,
+        width: hrcatCfg.widget.window?.width ?? 200,
+        height: hrcatCfg.widget.window?.height ?? 150,
+        alwaysOnTop: hrcatCfg.widget.window?.alwaysOnTop ?? true,
+        transparent: hrcatCfg.widget.window?.transparent ?? true,
       },
     }
   }
 
-  if (hasStreaming && brcatCfg.streaming) {
+  if (hasStreaming && hrcatCfg.streaming) {
     manifest.streaming = {
       entry: 'streaming/index.html',
       viewport: {
-        width: brcatCfg.streaming.viewport?.width ?? 1920,
-        height: brcatCfg.streaming.viewport?.height ?? 1080,
+        width: hrcatCfg.streaming.viewport?.width ?? 1920,
+        height: hrcatCfg.streaming.viewport?.height ?? 1080,
       },
     }
   }
@@ -95,7 +95,7 @@ function generateManifest() {
   }
 
   // 复制图标
-  const iconFile = brcatCfg.icon ?? 'icon.png'
+  const iconFile = hrcatCfg.icon ?? 'icon.png'
   const iconSrc = path.join(__dirname, 'widget', 'public', iconFile)
   if (fs.existsSync(iconSrc)) {
     fs.copyFileSync(iconSrc, path.join(manifestDir, iconFile))
@@ -109,28 +109,28 @@ function generateManifest() {
   logger.info(`Generated dist/${pluginId}/hbcat-manifest.json`)
 }
 
-// ── 打包 .brcp（文件名含版本号） ──
+// ── 打包 .hrcp（文件名含版本号） ──
 function packagePlugin() {
   const sourceDir = path.join(__dirname, 'dist', pluginId)
   const output = fs.createWriteStream(
-    path.join(__dirname, 'dist', `${pluginId}_${pkg.version}.brcp`),
+    path.join(__dirname, 'dist', `${pluginId}_${pkg.version}.hrcp`),
   )
   const archive = archiver('zip', { zlib: { level: 9 } })
   archive.pipe(output)
   archive.on('error', (err: Error) => { throw err })
   archive.directory(sourceDir, false)
   archive.finalize().then(() => {
-    logger.info(`Packaged dist/${pluginId}_${pkg.version}.brcp`)
+    logger.info(`Packaged dist/${pluginId}_${pkg.version}.hrcp`)
   })
 }
 
 // ── 自定义 Vite 插件：构建完成后生成 manifest 并打包 ──
 // 如果同时存在 widget 和 streaming，主构建完成后触发第二个构建
-function brcatPostBuildPlugin() {
+function hrcatPostBuildPlugin() {
   let secondBuildDone = false
 
   return {
-    name: 'brcat-post-build',
+    name: 'hrcat-post-build',
     async writeBundle() {
       // 如果同时需要构建 streaming 且尚未构建，先触发 streaming 构建
       if (hasWidget && hasStreaming && !secondBuildDone) {
@@ -155,19 +155,19 @@ function resolveConfig(): UserConfig {
   if (hasWidget) {
     return {
       ...widgetConfig,
-      plugins: [...(widgetConfig.plugins ?? []), brcatPostBuildPlugin()],
+      plugins: [...(widgetConfig.plugins ?? []), hrcatPostBuildPlugin()],
     }
   }
   if (hasStreaming) {
     return {
       ...streamingConfig,
-      plugins: [...(streamingConfig.plugins ?? []), brcatPostBuildPlugin()],
+      plugins: [...(streamingConfig.plugins ?? []), hrcatPostBuildPlugin()],
     }
   }
   // 兼容旧结构
   return {
     ...legacyConfig,
-    plugins: [...(legacyConfig.plugins ?? []), brcatPostBuildPlugin()],
+    plugins: [...(legacyConfig.plugins ?? []), hrcatPostBuildPlugin()],
   }
 }
 

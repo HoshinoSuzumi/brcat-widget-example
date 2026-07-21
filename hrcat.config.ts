@@ -1,4 +1,4 @@
-interface BrcatUserConfig {
+interface HrcatUserConfig {
   name?: string
   homepage?: string
   icon?: string
@@ -20,7 +20,7 @@ interface BrcatUserConfig {
   settings?: Record<string, unknown>
 }
 
-const config: BrcatUserConfig = {
+const config: HrcatUserConfig = {
   name: 'HeartBeat Cat 示例插件',
   icon: 'favicon_256.ico',
 
@@ -53,15 +53,10 @@ const config: BrcatUserConfig = {
       },
       maxHR: {
         type: 'number',
-        minimum: 60,
-        maximum: 240,
+        minimum: 100,
+        maximum: 255,
         default: 200,
         title: '最大心率',
-      },
-      showStatusBar: {
-        type: 'boolean',
-        default: true,
-        title: '显示状态栏',
       },
     },
   },

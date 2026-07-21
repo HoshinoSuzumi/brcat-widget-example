@@ -10,5 +10,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["widget/src/**/*.ts", "widget/src/**/*.tsx", "widget/src/**/*.vue", "brcat.config.ts", "vite.config.ts"]
+  "include": [
+    "widget/src/**/*.ts",
+    "widget/src/**/*.tsx",
+    "widget/src/**/*.vue",
+    "hrcat.config.ts",
+    "vite.config.ts"
+  ]
 }
