@@ -28,7 +28,8 @@ function connectSSE() {
   eventSource = new EventSource(`/p/${pluginId}/events`)
 
   eventSource.addEventListener('heart-rate', (e) => {
-    hr.value = JSON.parse(e.data).value ?? JSON.parse(e.data)
+    const payload = JSON.parse(e.data)
+    hr.value = typeof payload === 'number' ? payload : payload.value
   })
 
   eventSource.addEventListener('connected', () => {
@@ -36,9 +37,7 @@ function connectSSE() {
   })
 
   eventSource.onerror = () => {
-    console.warn('[Streaming] SSE 连接断开，5秒后重连...')
-    eventSource?.close()
-    setTimeout(connectSSE, 5000)
+    console.warn('[Streaming] SSE 连接断开，等待浏览器自动重连')
   }
 }
 

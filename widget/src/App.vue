@@ -2,6 +2,7 @@
 import { useHeartRate } from '../../shared/composables/useHeartRate'
 
 const { hr } = useHeartRate()
+const imageUrl = `${import.meta.env.BASE_URL}favicon_256.ico`
 </script>
 
 <template>
@@ -10,7 +11,8 @@ const { hr } = useHeartRate()
     data-tauri-drag-region
   >
     <img
-      src="/favicon_256.ico"
+      :src="imageUrl"
+      alt="HeartBeat Cat"
       data-tauri-drag-region
     />
     <div data-tauri-drag-region>

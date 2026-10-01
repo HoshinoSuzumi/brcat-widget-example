@@ -10,6 +10,9 @@ const logger = createLogger('info', { prefix: 'hrcat' })
 
 // ── 插件 ID（使用 package.json 的 name） ──
 const pluginId = pkg.name
+if (!/^[a-z0-9][a-z0-9_-]*$/.test(pluginId)) {
+  throw new Error(`Invalid plugin ID: ${pluginId}`)
+}
 
 // ── 检测哪些能力目录存在 ──
 const hasWidget = fs.existsSync(path.join(__dirname, 'widget'))
@@ -61,7 +64,7 @@ function generateManifest() {
       description: pkg.description,
       author: pkg.author ?? null,
       homepage: hrcatCfg.homepage ?? null,
-      icon: hrcatCfg.icon ?? 'icon.png',
+      ...(hrcatCfg.icon ? { icon: path.basename(hrcatCfg.icon) } : {}),
     },
     permissions: hrcatCfg.permissions ?? [],
     settings: hrcatCfg.settings ?? null,
@@ -95,10 +98,13 @@ function generateManifest() {
   }
 
   // 复制图标
-  const iconFile = hrcatCfg.icon ?? 'icon.png'
-  const iconSrc = path.join(__dirname, 'widget', 'public', iconFile)
-  if (fs.existsSync(iconSrc)) {
-    fs.copyFileSync(iconSrc, path.join(manifestDir, iconFile))
+  if (hrcatCfg.icon) {
+    const iconFile = hrcatCfg.icon
+    const iconSrc = ['widget', 'streaming', 'public']
+      .map((dir) => path.join(__dirname, dir, ...(dir === 'public' ? [] : ['public']), iconFile))
+      .find((file) => fs.existsSync(file))
+    if (!iconSrc) throw new Error(`Plugin icon not found: ${iconFile}`)
+    fs.copyFileSync(iconSrc, path.join(manifestDir, path.basename(iconFile)))
   }
 
   fs.writeFileSync(
@@ -110,18 +116,22 @@ function generateManifest() {
 }
 
 // ── 打包 .hrcp（文件名含版本号） ──
-function packagePlugin() {
+async function packagePlugin(): Promise<void> {
   const sourceDir = path.join(__dirname, 'dist', pluginId)
   const output = fs.createWriteStream(
     path.join(__dirname, 'dist', `${pluginId}_${pkg.version}.hrcp`),
   )
   const archive = archiver('zip', { zlib: { level: 9 } })
-  archive.pipe(output)
-  archive.on('error', (err: Error) => { throw err })
-  archive.directory(sourceDir, false)
-  archive.finalize().then(() => {
-    logger.info(`Packaged dist/${pluginId}_${pkg.version}.hrcp`)
+  const completed = new Promise<void>((resolve, reject) => {
+    output.on('close', resolve)
+    output.on('error', reject)
+    archive.on('error', reject)
   })
+  archive.pipe(output)
+  archive.directory(sourceDir, false)
+  await archive.finalize()
+  await completed
+  logger.info(`Packaged dist/${pluginId}_${pkg.version}.hrcp`)
 }
 
 // ── 自定义 Vite 插件：构建完成后生成 manifest 并打包 ──
@@ -145,7 +155,7 @@ function hrcatPostBuildPlugin() {
       }
 
       generateManifest()
-      packagePlugin()
+      await packagePlugin()
     },
   }
 }
