@@ -33,7 +33,7 @@ const config: HrcatUserConfig = {
   },
 
   streaming: {
-    viewport: { width: 260, height: 260 },
+    viewport: { width: 560, height: 320 },
   },
 
   permissions: [
@@ -45,9 +45,17 @@ const config: HrcatUserConfig = {
   settings: {
     type: 'object',
     properties: {
+      colorTheme: {
+        type: 'string',
+        enum: ['rose', 'cyan', 'lime'],
+        enumLabels: ['暖红', '冰蓝', '荧绿'],
+        default: 'rose',
+        title: '配色',
+      },
       displayUnit: {
         type: 'string',
         enum: ['bpm', 'percentage'],
+        enumLabels: ['BPM', '百分比'],
         default: 'bpm',
         title: '显示单位',
       },
@@ -57,6 +65,16 @@ const config: HrcatUserConfig = {
         maximum: 255,
         default: 200,
         title: '最大心率',
+      },
+      showTrend: {
+        type: 'boolean',
+        default: true,
+        title: '显示趋势图',
+      },
+      showMetrics: {
+        type: 'boolean',
+        default: true,
+        title: '显示均值与峰值',
       },
     },
   },

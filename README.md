@@ -1,6 +1,8 @@
 # HeartBeatCat 示例插件
 
-包含桌面组件（`widget/`）和推流页面（`streaming/`）。运行 `pnpm build` 后，产物位于 `dist/hrcat-widget-example/`，可安装的压缩包位于 `dist/hrcat-widget-example_0.0.2.hrcp`。
+包含桌面组件（`widget/`）和推流页面（`streaming/`）。运行 `pnpm build` 后，产物位于 `dist/hrcat-widget-example/`，可安装的压缩包位于 `dist/hrcat-widget-example_0.0.3.hrcp`。
+
+推流页面建议在 OBS 浏览器源中使用 **560 × 320** 视口。页面显示实时心率、近 30 秒趋势、均值与本次峰值；没有新数据时会显示等待状态，避免把旧数值误当作实时心率。插件设置可调整配色、显示单位、最大心率，以及趋势图和统计信息的可见性。设置变更会在已打开的推流页面中自动更新。
 
 ## 图片与其他公开资源
 

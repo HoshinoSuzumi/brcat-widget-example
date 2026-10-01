@@ -1,13 +1,13 @@
 {
   "name": "hrcat-widget-example",
-  "description": "A simple example of a widget using hrcat",
+  "description": "桌面心率组件与直播浏览器源示例",
   "keywords": [
     "hrcat",
     "widget",
     "example"
   ],
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Timothy Yin",
     "email": "master@uniiem.com"
